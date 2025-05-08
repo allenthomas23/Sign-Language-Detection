@@ -58,7 +58,7 @@ def extract_landmarks(results):
              for lm in results.right_hand_landmarks.landmark]
         ).flatten()
     else:
-        # 21 points × 4 values each → zeros
+        # 21 points × 4 values each  zeros
         right = np.zeros(21 * 4)
 
     # Left hand: 21 points × 3 values each (no visibility)
@@ -69,8 +69,25 @@ def extract_landmarks(results):
         ).flatten()
     else:
         left = np.zeros(21 * 3)
-
-    return right, left
+    if results.pose_landmarks:
+        # Pose: 33 points × 3 values each
+        pose = np.array(
+            [[lm.x, lm.y, lm.z]
+             for lm in results.pose_landmarks.landmark]
+        ).flatten()
+    else:
+        # 33 points × 3 values each  zeros
+        pose = np.zeros(33 * 3)
+    if results.face_landmarks:
+        # Face: 468 points × 3 values each
+        face = np.array(
+            [[lm.x, lm.y, lm.z]
+             for lm in results.face_landmarks.landmark]
+        ).flatten()
+    else:
+        # 468 points × 3 values each  zeros
+        face = np.zeros(468 * 3)
+    return left, right, pose, face
 
 
 def main():
@@ -91,7 +108,7 @@ def main():
             draw_landmarks(image, results)
 
             # extract landmarks for further processing
-            right_landmarks, left_landmarks = extract_landmarks(results)
+            left_landmarks,right_landmarks,pose_landmarks,face_landmarks = extract_landmarks(results)
 
             cv2.imshow('MediaPipe Feed', image)
             if cv2.waitKey(10) & 0xFF == ord('q'):
@@ -103,7 +120,8 @@ def main():
     # display shapes of the landmark arrays
     print(f"Right hand landmarks shape: {right_landmarks.shape}")
     print(f"Left hand landmarks shape:  {left_landmarks.shape}")
-
+    print(f"Pose landmarks shape:      {pose_landmarks.shape}")
+    print(f"Face landmarks shape:      {face_landmarks.shape}")
 
 if __name__ == '__main__':
     main()
