@@ -87,16 +87,14 @@ def extract_landmarks(results):
     else:
         # 468 points × 3 values each  zeros
         face = np.zeros(468 * 3)
-    return left, right, pose, face
+    return np.concatenate([pose,face,left,right])
 
 
 def main():
+    
     cap = cv2.VideoCapture(0)
     # initialize holistic model
-    with mp_holistic.Holistic(
-            min_detection_confidence=0.5,
-            min_tracking_confidence=0.5
-    ) as holistic:
+    with mp_holistic.Holistic(min_detection_confidence=0.5,min_tracking_confidence=0.5) as holistic:
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
@@ -108,7 +106,7 @@ def main():
             draw_landmarks(image, results)
 
             # extract landmarks for further processing
-            left_landmarks,right_landmarks,pose_landmarks,face_landmarks = extract_landmarks(results)
+            allLandmarks = extract_landmarks(results)
 
             cv2.imshow('MediaPipe Feed', image)
             if cv2.waitKey(10) & 0xFF == ord('q'):
@@ -116,12 +114,7 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
-
-    # display shapes of the landmark arrays
-    print(f"Right hand landmarks shape: {right_landmarks.shape}")
-    print(f"Left hand landmarks shape:  {left_landmarks.shape}")
-    print(f"Pose landmarks shape:      {pose_landmarks.shape}")
-    print(f"Face landmarks shape:      {face_landmarks.shape}")
+    print(allLandmarks)
 
 if __name__ == '__main__':
     main()
