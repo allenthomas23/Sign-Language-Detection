@@ -1,7 +1,8 @@
-# Byte-compiled / optimized / DLL files
+
 __pycache__/
 
 data/
 *.h5
 logs
 venv
+.DS_Store
