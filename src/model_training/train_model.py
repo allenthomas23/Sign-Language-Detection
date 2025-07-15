@@ -34,15 +34,15 @@ class GestureModel:
 if __name__ == '__main__':
     from data_processing.prepare_dataset import DatasetBuilder
     
-    # 1. Prepare data
+
     builder = DatasetBuilder()
     sequences, labels = builder.load_data()
     x_train, x_test, y_train, y_test = builder.split_dataset(sequences, labels)
     
-    # 2. Build and train model
+
     gesture_recognizer = GestureModel(input_shape=(x_train.shape[1], x_train.shape[2]))
     gesture_recognizer.train(x_train, y_train)
     
-    # 3. (Optional) Evaluate model
+
     loss, accuracy = gesture_recognizer.model.evaluate(x_test, y_test)
     print(f"Test Accuracy: {accuracy * 100:.2f}%")
