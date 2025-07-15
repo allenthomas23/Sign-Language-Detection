@@ -54,7 +54,7 @@ class RealTimeDetector:
 
         self.ui_manager.draw_probability_bars(image, prediction, GESTURE_LABELS)
         self.ui_manager.show_reset_message(image)
-        self.sequence_data = [] # Reset sequence after prediction
+        self.sequence_data = []
 
     def cleanup(self):
         self.cap.release()
